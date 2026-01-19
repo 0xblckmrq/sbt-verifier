@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
   <title>Discord SBT Wallet Signer</title>
 </head>
 <body>
   <h2>Human ID SBT Verification</h2>
   <p>Paste the challenge message from Discord below and click "Sign Message".</p>
+
+  <!-- Input for Discord challenge -->
   <input type="text" id="challenge" placeholder="Paste challenge here" size="60"/>
-  <button onclick="signMessage()">Sign Message</button>
+  <button id="signButton">Sign Message</button>
 
   <h3>Signature:</h3>
   <textarea id="signature" rows="4" cols="80" readonly></textarea>
@@ -15,34 +18,14 @@
   <!-- ethers.js -->
   <script src="https://cdn.jsdelivr.net/npm/ethers/dist/ethers.min.js"></script>
   <script>
-    async function signMessage() {
-      if (!window.ethereum) {
-        alert("MetaMask not detected! Please install MetaMask.");
-        return;
-      }
+    const button = document.getElementById("signButton");
 
+    button.addEventListener("click", async () => {
       const challenge = document.getElementById("challenge").value.trim();
       if (!challenge) {
-        alert("Paste the challenge message from Discord first!");
+        alert("Paste the Discord challenge first!");
         return;
       }
 
-      try {
-        // Request wallet access
-        await window.ethereum.request({ method: 'eth_requestAccounts' });
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
-
-        // Sign the message
-        const signature = await signer.signMessage(challenge);
-
-        // Show signature
-        document.getElementById("signature").value = signature;
-      } catch (err) {
-        console.error(err);
-        alert("Error signing message: " + err.message);
-      }
-    }
-  </script>
-</body>
-</html>
+      if (!window.ethereum) {
+        alert("MetaMask
